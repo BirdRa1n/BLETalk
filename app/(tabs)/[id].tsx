@@ -1,6 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useBle } from '~/contexts/BleContext';
 
 export default function DeviceScreen() {
@@ -10,12 +10,23 @@ export default function DeviceScreen() {
     const [message, setMessage] = useState('');
     const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
 
+    const handleMessageReceived = useCallback((msg: string) => {
+        setReceivedMessages((prev) => [...prev, msg]);
+    }, []);
+
     useEffect(() => {
         if (device && !connectedDevice) {
             connectToDevice(device);
         }
-        receiveMessage((msg) => setReceivedMessages((prev) => [...prev, msg]));
-    }, [device, connectedDevice, connectToDevice, receiveMessage]);
+        if (connectedDevice) {
+            receiveMessage(handleMessageReceived);
+        }
+
+        return () => {
+            // Cleanup logic for message monitoring can be added here if needed,
+            // but 'cancelTransaction' does not exist on 'Device'.
+        };
+    }, [device, connectedDevice, connectToDevice, receiveMessage, handleMessageReceived]);
 
     const handleSendMessage = () => {
         sendMessage(message);

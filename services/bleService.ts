@@ -4,28 +4,54 @@ import { Buffer } from 'buffer';
 export const bleService = {
     async sendMessage(device: Device, serviceUUID: string, characteristicUUID: string, message: string) {
         try {
-            const connectedDevice = await device.connect();
-            await connectedDevice.discoverAllServicesAndCharacteristics();
+            let connectedDevice = device;
+            if (!(await device.isConnected())) {
+                console.log('Device not connected, attempting to reconnect');
+                connectedDevice = await device.connect();
+                await connectedDevice.discoverAllServicesAndCharacteristics();
+            }
+            const characteristics = await connectedDevice.characteristicsForService(serviceUUID);
+            const targetCharacteristic = characteristics.find((c) => c.uuid === characteristicUUID);
+            if (!targetCharacteristic) {
+                throw new Error(`Characteristic ${characteristicUUID} not found`);
+            }
+            if (!targetCharacteristic.isWritableWithResponse && !targetCharacteristic.isWritableWithoutResponse) {
+                throw new Error(`Characteristic ${characteristicUUID} does not support write`);
+            }
             await connectedDevice.writeCharacteristicWithResponseForService(
                 serviceUUID,
                 characteristicUUID,
                 Buffer.from(message).toString('base64'),
             );
+            console.log('Message sent successfully:', message);
         } catch (error) {
-            console.error('Erro ao enviar mensagem:', error);
+            if (error instanceof Error) {
+                throw new Error(`Failed to send message: ${error.message}`);
+            } else {
+                throw new Error('Failed to send message: Unknown error');
+            }
         }
     },
 
     monitorMessages(device: Device, serviceUUID: string, characteristicUUID: string, callback: (message: string) => void) {
-        device.monitorCharacteristicForService(serviceUUID, characteristicUUID, (error, characteristic) => {
-            if (error) {
-                console.error('Erro ao monitorar mensagens:', error);
-                return;
-            }
-            if (characteristic?.value) {
-                const message = Buffer.from(characteristic.value, 'base64').toString();
-                callback(message);
-            }
-        });
+        try {
+            device.monitorCharacteristicForService(serviceUUID, characteristicUUID, (error, characteristic) => {
+                if (error) {
+                    if (error.message.includes('disconnected') || error.message.includes('cancelled')) {
+                        console.log('Monitoring stopped due to disconnection or cancellation');
+                        return;
+                    }
+                    console.error('Erro ao monitorar mensagens:', error);
+                    return;
+                }
+                if (characteristic?.value) {
+                    const message = Buffer.from(characteristic.value, 'base64').toString();
+                    callback(message);
+                }
+            }, 'messageMonitor');
+        } catch (error) {
+            console.error('Monitor setup error:', error);
+            throw error;
+        }
     },
 };

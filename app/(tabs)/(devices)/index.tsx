@@ -38,10 +38,12 @@ export default function DevicesScreen() {
                             scrollEnabled={false}
                             keyExtractor={(item) => item.id}
                             renderItem={({ item }) => (
-                                <TouchableOpacity className="p-4 border-b border-gray-200">
-                                    <Text className="text-lg">{item.name || 'Dispositivo Desconhecido'}</Text>
-                                    <Text className="text-sm text-gray-500">{item.id}</Text>
-                                </TouchableOpacity>
+                                <Link href={`/(tabs)/${item.id}`} asChild>
+                                    <TouchableOpacity className="p-4 border-b border-gray-200">
+                                        <Text className="text-lg">{item.name || 'Dispositivo Desconhecido'}</Text>
+                                        <Text className="text-sm text-gray-500">{item.id}</Text>
+                                    </TouchableOpacity>
+                                </Link>
                             )}
                         />
                     </>
