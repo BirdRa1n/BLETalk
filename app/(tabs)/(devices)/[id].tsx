@@ -33,7 +33,7 @@ export default function DeviceScreen() {
     };
 
     return (
-        <View className="flex-1 p-4 bg-white">
+        <View className="flex-1 p-4">
             <Text className="text-2xl font-bold mb-4">{device?.name || 'Dispositivo'}</Text>
             <Text className="text-sm mb-4">
                 Status: {connectedDevice?.id === device?.id ? 'Conectado' : 'Desconectado'}

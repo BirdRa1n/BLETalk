@@ -9,7 +9,18 @@ export default function Layout() {
                     title: 'Dispositivos',
                     headerShown: true,
                     headerLargeTitle: true,
-                    headerLargeTitleShadowVisible: false
+                    headerLargeTitleShadowVisible: false,
+                    headerLargeStyle: { backgroundColor: 'transparent' },
+                }}
+            />
+            <Stack.Screen
+                name="[id]"
+                options={{
+                    title: 'Detalhes',
+                    headerShown: true,
+                    headerLargeTitle: true,
+                    headerLargeTitleShadowVisible: false,
+                    headerLargeStyle: { backgroundColor: 'transparent' },
                 }}
             />
         </Stack>
