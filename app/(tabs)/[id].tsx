@@ -15,22 +15,21 @@ export default function DeviceScreen() {
     }, []);
 
     useEffect(() => {
-        if (device && !connectedDevice) {
-            connectToDevice(device);
-        }
+        // Configurar monitoramento de mensagens apenas quando conectado
         if (connectedDevice) {
             receiveMessage(handleMessageReceived);
         }
-
-        return () => {
-            // Cleanup logic for message monitoring can be added here if needed,
-            // but 'cancelTransaction' does not exist on 'Device'.
-        };
-    }, [device, connectedDevice, connectToDevice, receiveMessage, handleMessageReceived]);
+    }, [connectedDevice, receiveMessage, handleMessageReceived]);
 
     const handleSendMessage = () => {
         sendMessage(message);
         setMessage('');
+    };
+
+    const handleConnect = () => {
+        if (device) {
+            connectToDevice(device);
+        }
     };
 
     return (
@@ -39,24 +38,37 @@ export default function DeviceScreen() {
             <Text className="text-sm mb-4">
                 Status: {connectedDevice?.id === device?.id ? 'Conectado' : 'Desconectado'}
             </Text>
-            <TextInput
-                value={message}
-                onChangeText={setMessage}
-                placeholder="Digite uma mensagem"
-                className="p-2 border border-gray-300 rounded mb-4"
-            />
-            <TouchableOpacity
-                onPress={handleSendMessage}
-                className="p-4 bg-blue-500 rounded"
-            >
-                <Text className="text-white text-center">Enviar Mensagem</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={disconnectDevice}
-                className="p-4 bg-red-500 rounded mt-2"
-            >
-                <Text className="text-white text-center">Desconectar</Text>
-            </TouchableOpacity>
+
+            {connectedDevice?.id === device?.id ? (
+                <>
+                    <TextInput
+                        value={message}
+                        onChangeText={setMessage}
+                        placeholder="Digite uma mensagem"
+                        className="p-2 border border-gray-300 rounded mb-4"
+                    />
+                    <TouchableOpacity
+                        onPress={handleSendMessage}
+                        className="p-4 bg-blue-500 rounded"
+                    >
+                        <Text className="text-white text-center">Enviar Mensagem</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={disconnectDevice}
+                        className="p-4 bg-red-500 rounded mt-2"
+                    >
+                        <Text className="text-white text-center">Desconectar</Text>
+                    </TouchableOpacity>
+                </>
+            ) : (
+                <TouchableOpacity
+                    onPress={handleConnect}
+                    className="p-4 bg-green-500 rounded"
+                >
+                    <Text className="text-white text-center">Conectar</Text>
+                </TouchableOpacity>
+            )}
+
             <Text className="text-lg font-bold mt-4">Mensagens Recebidas:</Text>
             {receivedMessages.map((msg, index) => (
                 <Text key={index} className="text-sm">{msg}</Text>

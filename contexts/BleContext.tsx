@@ -129,6 +129,8 @@ export const BleProvider: React.FC<{
         const disconnectDevice = async () => {
             if (connectedDevice) {
                 try {
+                    // Cancelar monitoramento antes de desconectar
+                    await manager?.cancelTransaction('messageMonitor');
                     await manager?.cancelDeviceConnection(connectedDevice.id);
                     setConnectedDevice(null);
                     console.log('Device disconnected');
