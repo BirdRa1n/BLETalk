@@ -56,7 +56,7 @@ export const BleProvider: React.FC<{
                         'Permissions Denied',
                         'Please enable Bluetooth permissions in settings to use this feature.',
                     );
-                    console.log('Permissões de Bluetooth não concedidas');
+                    console.log('Bluetooth permissions not granted');
                 }
             });
 
@@ -76,7 +76,7 @@ export const BleProvider: React.FC<{
                         console.error('Scan error:', error);
                         return;
                     }
-                    if (device && device.name === 'ESP32_BLE') {
+                    if (device) {
                         setDevices((prev) => {
                             if (!prev.find((d) => d.id === device.id)) {
                                 return [...prev, device];
@@ -85,7 +85,6 @@ export const BleProvider: React.FC<{
                         });
                     }
                 });
-
             }
         };
 
@@ -97,27 +96,35 @@ export const BleProvider: React.FC<{
         const connectToDevice = async (device: Device) => {
             try {
                 await manager?.stopDeviceScan();
-                console.log('Connecting to device:', device.name, device.id);
+                console.log('Connecting to device:', device.name || 'Unnamed device', device.id);
                 const connected = await device.connect();
                 console.log('Device connected, discovering services...');
                 await connected.discoverAllServicesAndCharacteristics();
-                const characteristics = await connected.characteristicsForService(serviceUUID);
-                const targetCharacteristic = characteristics.find((c) => c.uuid === characteristicUUID);
-                if (!targetCharacteristic) {
-                    throw new Error(`Characteristic ${characteristicUUID} not found`);
+
+                if (serviceUUID && characteristicUUID) {
+                    const characteristics = await connected.characteristicsForService(serviceUUID);
+                    const targetCharacteristic = characteristics.find((c) => c.uuid === characteristicUUID);
+
+                    if (!targetCharacteristic) {
+                        throw new Error(`Characteristic ${characteristicUUID} not found`);
+                    }
+
+                    if (!targetCharacteristic.isWritableWithResponse && !targetCharacteristic.isWritableWithoutResponse) {
+                        throw new Error(`Characteristic ${characteristicUUID} does not support write`);
+                    }
+
+                    if (!targetCharacteristic.isNotifiable && !targetCharacteristic.isIndicatable) {
+                        console.warn(`Characteristic ${characteristicUUID} does not support notifications/indications`);
+                    }
+
+                    console.log('Characteristic properties:', {
+                        uuid: targetCharacteristic.uuid,
+                        isWritable: targetCharacteristic.isWritableWithResponse || targetCharacteristic.isWritableWithoutResponse,
+                        isNotifiable: targetCharacteristic.isNotifiable,
+                        isIndicatable: targetCharacteristic.isIndicatable,
+                    });
                 }
-                if (!targetCharacteristic.isWritableWithResponse && !targetCharacteristic.isWritableWithoutResponse) {
-                    throw new Error(`Characteristic ${characteristicUUID} does not support write`);
-                }
-                if (!targetCharacteristic.isNotifiable && !targetCharacteristic.isIndicatable) {
-                    console.warn(`Characteristic ${characteristicUUID} does not support notifications/indications`);
-                }
-                console.log('Characteristic properties:', {
-                    uuid: targetCharacteristic.uuid,
-                    isWritable: targetCharacteristic.isWritableWithResponse || targetCharacteristic.isWritableWithoutResponse,
-                    isNotifiable: targetCharacteristic.isNotifiable,
-                    isIndicatable: targetCharacteristic.isIndicatable,
-                });
+
                 setConnectedDevice(connected);
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : String(error);
@@ -129,12 +136,11 @@ export const BleProvider: React.FC<{
         const disconnectDevice = async () => {
             if (connectedDevice) {
                 try {
-                    // Cancelar monitoramento antes de desconectar
                     await manager?.cancelTransaction('messageMonitor');
                     await manager?.cancelDeviceConnection(connectedDevice.id);
                     setConnectedDevice(null);
                     console.log('Device disconnected');
-                    router.replace('/(tabs)/(devices)');
+                    router.back();
                 } catch (error) {
                     console.error('Disconnect error:', error);
                 }

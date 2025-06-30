@@ -20,7 +20,6 @@ export default function DevicesScreen() {
             className="flex h-full"
             contentInsetAdjustmentBehavior="automatic"
             showsVerticalScrollIndicator={false}
-
         >
             <View className="flex-1 p-4">
                 {permissionsGranted ? (

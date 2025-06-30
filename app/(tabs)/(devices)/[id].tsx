@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useCallback } from 'react';
 import { useBle } from '~/contexts/BleContext';
@@ -33,7 +33,11 @@ export default function DeviceScreen() {
     };
 
     return (
-        <View className="flex-1 p-4">
+        <ScrollView
+            className="flex h-full"
+            contentInsetAdjustmentBehavior="automatic"
+            showsVerticalScrollIndicator={false}
+        >
             <Text className="text-2xl font-bold mb-4">{device?.name || 'Dispositivo'}</Text>
             <Text className="text-sm mb-4">
                 Status: {connectedDevice?.id === device?.id ? 'Conectado' : 'Desconectado'}
@@ -73,6 +77,6 @@ export default function DeviceScreen() {
             {receivedMessages.map((msg, index) => (
                 <Text key={index} className="text-sm">{msg}</Text>
             ))}
-        </View>
+        </ScrollView>
     );
 }

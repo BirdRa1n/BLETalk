@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, FlatList, TouchableOpacity, TextInput, Switch, Text } from 'react-native';
+import { View, FlatList, TouchableOpacity, TextInput, Switch, Text, useColorScheme } from 'react-native';
 import { MaterialIcons, Feather } from '@expo/vector-icons';
 
 interface ListItem {
@@ -44,6 +44,7 @@ const List: React.FC<ListProps> = ({
 }) => {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editValue, setEditValue] = useState('');
+    const colorScheme = useColorScheme(); // Moved the hook call to the top level
 
     const renderItem = ({ item, index }: { item: ListItem; index: number }) => {
         const isFirst = index === 0;
@@ -82,7 +83,7 @@ const List: React.FC<ListProps> = ({
                     <View className="flex-1 flex-row justify-between items-center">
                         {item.type === 'input' || editingId === item.id ? (
                             <TextInput
-                                className="flex-1 text-base text-black py-0"
+                                className="flex-1 text-base text-black dark:text-white py-0"
                                 value={editingId === item.id ? editValue : item.inputValue}
                                 onChangeText={editingId === item.id ? setEditValue : item.onInputChange}
                                 placeholder={item.inputPlaceholder}
@@ -90,22 +91,23 @@ const List: React.FC<ListProps> = ({
                                 onSubmitEditing={handleEditSubmit}
                                 onBlur={handleEditSubmit}
                                 editable={!item.disabled}
+                                placeholderTextColor={colorScheme === 'dark' ? '#a1a1aa' : '#d4d4d8'}
                             />
                         ) : (
-                            <Text className={`text-base ${item.disabled ? 'text-gray-400' : 'text-black'}`}>
+                            <Text className={`text-base ${item.disabled ? 'text-gray-400' : 'text-black dark:text-white'}`}>
                                 {item.label}
                             </Text>
                         )}
 
                         {item.value && !editingId && item.type !== 'input' && (
-                            <Text className={`text-base ${item.disabled ? 'text-gray-400' : 'text-gray-500'}`}>
+                            <Text className={`text-base ${item.disabled ? 'text-gray-400' : 'text-gray-500 dark:text-gray-400'}`}>
                                 {item.value}
                             </Text>
                         )}
                     </View>
 
                     {item.type === 'navigation' && (
-                        <Feather name="chevron-right" size={20} className="text-gray-400 ml-2" />
+                        <Feather name="chevron-right" size={20} color={colorScheme === 'dark' ? '#a1a1aa' : '#71717a'} />
                     )}
 
                     {item.type === 'switch' && item.onSwitchChange && (
@@ -118,7 +120,7 @@ const List: React.FC<ListProps> = ({
 
                     {item.editable && editingId !== item.id && (
                         <TouchableOpacity onPress={handleEditPress} className="ml-2">
-                            <MaterialIcons name="edit" size={20} className="text-blue-500" />
+                            <MaterialIcons name="edit" size={20} color="#3b82f6" />
                         </TouchableOpacity>
                     )}
 
@@ -130,7 +132,7 @@ const List: React.FC<ListProps> = ({
 
     return (
         <View className='mt-4'>
-            {title && <Text className="text-sm text-gray-500 px-3 mt-0 mb-0">{title}</Text>}
+            {title && <Text className="text-sm text-gray-500 dark:text-gray-400 px-3 mt-0 mb-0">{title}</Text>}
             <View className={`w-full my-1 ${grouped && !inset ? 'bg-white rounded-xl dark:bg-zinc-900' : ''}`}>
                 {header}
 
@@ -141,14 +143,14 @@ const List: React.FC<ListProps> = ({
                     keyExtractor={(item, index) => item.id || index.toString()}
                     ListEmptyComponent={
                         <View className="py-4 items-center justify-center">
-                            <Text className="text-base text-gray-500">Nenhum item encontrado</Text>
+                            <Text className="text-base text-gray-500 dark:text-gray-400">Nenhum item encontrado</Text>
                         </View>
                     }
                 />
 
                 {footer}
             </View>
-            {description && <Text className="text-xs text-gray-500 px-3 mt-1 mb-4">{description}</Text>}
+            {description && <Text className="text-xs text-gray-500 dark:text-gray-400 px-3 mt-1 mb-4">{description}</Text>}
         </View>
     );
 };
