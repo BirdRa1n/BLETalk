@@ -14,7 +14,10 @@ interface ListItem {
     switchValue?: boolean;
     onSwitchChange?: (value: boolean) => void;
     inputValue?: string;
+    inputType?: 'string' | 'number';
+    inputMultiLine?: boolean;
     onInputChange?: (text: string) => void;
+    onInputSubmit?: () => void;
     inputPlaceholder?: string;
     disabled?: boolean;
 }
@@ -44,7 +47,7 @@ const List: React.FC<ListProps> = ({
 }) => {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editValue, setEditValue] = useState('');
-    const colorScheme = useColorScheme(); // Moved the hook call to the top level
+    const colorScheme = useColorScheme();
 
     const renderItem = ({ item, index }: { item: ListItem; index: number }) => {
         const isFirst = index === 0;
@@ -55,7 +58,7 @@ const List: React.FC<ListProps> = ({
             grouped && inset && 'mx-4 rounded-lg',
             isFirst && grouped && (inset ? 'rounded-t-lg' : 'rounded-t-xl'),
             isLast && grouped && (inset ? 'rounded-b-lg' : 'rounded-b-xl'),
-            !grouped && showDividers && index < items.length - 1 && 'border-b border-gray-200',
+            !grouped && showDividers && index < items.length - 1 && 'border-b border-gray-200 dark:border-zinc-800',
         ].join(' ');
 
         const handleEditPress = () => {
@@ -68,6 +71,12 @@ const List: React.FC<ListProps> = ({
                 item.onInputChange(editValue);
             }
             setEditingId(null);
+        };
+
+        const handleInputSubmit = () => {
+            if (item.onInputSubmit) {
+                item.onInputSubmit();
+            }
         };
 
         return (
@@ -88,10 +97,13 @@ const List: React.FC<ListProps> = ({
                                 onChangeText={editingId === item.id ? setEditValue : item.onInputChange}
                                 placeholder={item.inputPlaceholder}
                                 autoFocus={editingId === item.id}
-                                onSubmitEditing={handleEditSubmit}
+                                onSubmitEditing={handleInputSubmit} // Chamado quando o usuário pressiona submit/return
                                 onBlur={handleEditSubmit}
                                 editable={!item.disabled}
+                                multiline={item.inputMultiLine}
+                                keyboardType={item.inputType === 'number' ? 'numeric' : 'default'}
                                 placeholderTextColor={colorScheme === 'dark' ? '#a1a1aa' : '#d4d4d8'}
+                                returnKeyType="send"
                             />
                         ) : (
                             <Text className={`text-base ${item.disabled ? 'text-gray-400' : 'text-black dark:text-white'}`}>
@@ -131,7 +143,7 @@ const List: React.FC<ListProps> = ({
     };
 
     return (
-        <View className='mt-4'>
+        <View className='mt-1'>
             {title && <Text className="text-sm text-gray-500 dark:text-gray-400 px-3 mt-0 mb-0">{title}</Text>}
             <View className={`w-full my-1 ${grouped && !inset ? 'bg-white rounded-xl dark:bg-zinc-900' : ''}`}>
                 {header}
@@ -150,7 +162,7 @@ const List: React.FC<ListProps> = ({
 
                 {footer}
             </View>
-            {description && <Text className="text-xs text-gray-500 dark:text-gray-400 px-3 mt-1 mb-4">{description}</Text>}
+            {description && <Text className="text-xs text-gray-500 dark:text-gray-400 px-3 mt-1 mb-1">{description}</Text>}
         </View>
     );
 };

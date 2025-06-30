@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { TabBarIcon } from '../../components/TabBarIcon';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TabLayout() {
   return (
@@ -9,7 +9,7 @@ export default function TabLayout() {
         options={{
           title: 'Dispositivos',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />
+          tabBarIcon: ({ color, size, focused }) => <Ionicons name={focused ? 'grid' : 'grid-outline'} size={size} color={color} />
         }}
       />
     </Tabs>

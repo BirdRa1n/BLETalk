@@ -21,7 +21,7 @@ export default function DevicesScreen() {
             contentInsetAdjustmentBehavior="automatic"
             showsVerticalScrollIndicator={false}
         >
-            <View className="flex-1 p-4">
+            <View className="flex-1 p-4 gap-4">
                 {permissionsGranted ? (
                     <>
                         <TouchableOpacity
