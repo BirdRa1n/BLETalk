@@ -21,18 +21,9 @@ export default function DevicesScreen() {
             contentInsetAdjustmentBehavior="automatic"
             showsVerticalScrollIndicator={false}
         >
-            <View className="flex-1 p-4 gap-4">
+            <View className="flex-1 p-5 gap-4">
                 {permissionsGranted ? (
                     <>
-                        <TouchableOpacity
-                            onPress={startScan}
-                            disabled={isScanning}
-                            className={`p-4 rounded-lg ${isScanning ? 'bg-gray-400 dark:bg-zinc-900' : 'bg-blue-500'}`}
-                        >
-                            <Text className="text-white text-center">
-                                {isScanning ? 'Escaneando...' : 'Escanear Dispositivos'}
-                            </Text>
-                        </TouchableOpacity>
                         <List
                             scrollable={false}
                             grouped
