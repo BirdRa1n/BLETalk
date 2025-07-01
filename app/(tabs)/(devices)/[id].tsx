@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, AppState } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useCallback } from 'react';
 import { useBle } from '~/contexts/BleContext';
@@ -10,17 +10,18 @@ export default function DeviceScreen() {
     const device = devices.find((d) => d.id === id);
     const [message, setMessage] = useState('');
     const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
+    const [enableBackgroundNotifications, setEnableBackgroundNotifications] = useState(false);
 
     const handleMessageReceived = useCallback((msg: string) => {
         setReceivedMessages((prev) => [...prev, msg]);
     }, []);
 
     useEffect(() => {
-        // Configurar monitoramento de mensagens apenas quando conectado
+        // Configure message monitoring when connected
         if (connectedDevice) {
-            receiveMessage(handleMessageReceived);
+            receiveMessage((msg) => handleMessageReceived(msg), enableBackgroundNotifications);
         }
-    }, [connectedDevice, receiveMessage, handleMessageReceived]);
+    }, [connectedDevice, receiveMessage, handleMessageReceived, enableBackgroundNotifications]);
 
     const handleSendMessage = () => {
         sendMessage(message);
@@ -44,9 +45,10 @@ export default function DeviceScreen() {
                 <>
                     <List
                         grouped
+                        scrollable={false}
                         showDividers={true}
-                        title='Informações do Dispositivo'
-                        description='Informações do dispositivo conectado'
+                        title='Informações do Dispositivo'
+                        description='Informações do dispositivo conectado'
                         items={[
                             {
                                 label: 'Name',
@@ -55,14 +57,21 @@ export default function DeviceScreen() {
                             {
                                 label: 'UUID',
                                 value: connectedDevice?.id || '',
+                            },
+                            {
+                                label: 'Notificações',
+                                type: 'switch',
+                                switchValue: enableBackgroundNotifications,
+                                onSwitchChange: (value) => setEnableBackgroundNotifications(value),
                             }
-                        ]} />
+                        ]}
+                    />
                     <List
                         grouped
                         title='Mensagens'
                         showDividers={true}
+                        scrollable={false}
                         items={[
-
                             {
                                 label: 'Mensagem',
                                 type: 'input',
@@ -72,13 +81,13 @@ export default function DeviceScreen() {
                                 onInputChange: (text) => setMessage(text),
                                 onInputSubmit: () => handleSendMessage(),
                             }
-                        ]} />
-
+                        ]}
+                    />
                     <TouchableOpacity
                         onPress={handleSendMessage}
-                        className="p-4 bg-white rounded-xl mt-5 dark:bg-zinc-900 items-center"
+                        className="p-4 bg-white rounded-xl mt-1 dark:bg-zinc-900 items-center"
                     >
-                        <Text className="text-white text-center">Enviar Mensagem</Text>
+                        <Text className="text-black text-center dark:text-white">Enviar Mensagem</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={disconnectDevice}
@@ -91,9 +100,10 @@ export default function DeviceScreen() {
                 <>
                     <List
                         grouped
-                        title='Informações do Dispositivo'
+                        title='Informações do Dispositivo'
                         showDividers={true}
-                        description='Informações do dispositivo conectado'
+                        scrollable={false}
+                        description='Informações do dispositivo conectado. Selecione para conectar ou enviar mensagens.'
                         items={[
                             {
                                 label: 'Name',
@@ -107,31 +117,25 @@ export default function DeviceScreen() {
                     />
                     <TouchableOpacity
                         onPress={handleConnect}
-                        className="p-4 bg-white rounded-xl mt-5 dark:bg-zinc-900 items-center"
+                        className="p-4 bg-white rounded-xl mt-1 dark:bg-zinc-900 items-center"
                     >
-                        <Text className="text-white text-center">Conectar</Text>
+                        <Text className="text-gray-600 dark:text-white text-center">Conectar</Text>
                     </TouchableOpacity>
                 </>
             )}
 
-            {
-                receiveMessage.length > 0 && (
-                    <List
-                        showDividers
-                        grouped
-                        title='Mensagens'
-                        items={receivedMessages.map((msg, index) => ({
-                            label: `Mensagem ${index + 1}`,
-                            value: msg
-                        }))}
-                    />
-                )
-            }
-
-            <Text className="text-lg font-bold mt-4">Mensagens Recebidas:</Text>
-            {receivedMessages.map((msg, index) => (
-                <Text key={index} className="text-sm">{msg}</Text>
-            ))}
+            {receivedMessages.length > 0 && (
+                <List
+                    showDividers
+                    grouped
+                    scrollable={false}
+                    title='Mensagens'
+                    items={receivedMessages.map((msg, index) => ({
+                        label: `Mensagem ${index + 1}`,
+                        value: msg
+                    }))}
+                />
+            )}
         </ScrollView>
     );
 }

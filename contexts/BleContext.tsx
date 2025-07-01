@@ -2,12 +2,23 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { BleManager, Device } from 'react-native-ble-plx';
 import { requestPermissions } from '../utils/permissions';
 import { bleService } from '~/services/bleService';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { router } from 'expo-router';
+import * as Notifications from 'expo-notifications';
 
 // UUIDs from ESP32 main.cpp
 const DEFAULT_SERVICE_UUID = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
 const DEFAULT_CHARACTERISTIC_UUID = 'beb5483e-36e1-4688-b7f5-ea07361b26a8';
+
+// Configure notification handler
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+        shouldShowBanner: true,
+        shouldShowList: true,
+    }),
+});
 
 interface BleContextType {
     manager: BleManager | null;
@@ -19,7 +30,7 @@ interface BleContextType {
     connectToDevice: (device: Device) => Promise<void>;
     disconnectDevice: () => Promise<void>;
     sendMessage: (message: string) => Promise<void>;
-    receiveMessage: (callback: (message: string) => void) => void;
+    receiveMessage: (callback: (message: string) => void, enableBackgroundNotifications: boolean) => void;
 }
 
 const BleContext = createContext<BleContextType>({
@@ -34,6 +45,28 @@ const BleContext = createContext<BleContextType>({
     sendMessage: async () => { },
     receiveMessage: () => { },
 });
+
+async function initializeNotifications() {
+    if (Platform.OS === 'android') {
+        await Notifications.setNotificationChannelAsync('bleMessages', {
+            name: 'BLE Messages',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+        });
+    }
+
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+        Alert.alert('Notification Permissions', 'Please enable notification permissions in settings to receive BLE messages.');
+        console.log('Notification permissions not granted');
+    }
+}
 
 export const BleProvider: React.FC<{
     children: React.ReactNode;
@@ -50,8 +83,12 @@ export const BleProvider: React.FC<{
         const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
 
         useEffect(() => {
-            requestPermissions().then((granted) => {
-                if (!granted) {
+            // Initialize BLE and notification permissions
+            Promise.all([
+                requestPermissions(),
+                initializeNotifications(),
+            ]).then(([bleGranted]) => {
+                if (!bleGranted) {
                     Alert.alert(
                         'Permissions Denied',
                         'Please enable Bluetooth permissions in settings to use this feature.',
@@ -60,7 +97,18 @@ export const BleProvider: React.FC<{
                 }
             });
 
+            // Set up notification listeners
+            const notificationListener = Notifications.addNotificationReceivedListener(notification => {
+                console.log('Notification received:', notification);
+            });
+
+            const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
+                console.log('Notification response:', response);
+            });
+
             return () => {
+                notificationListener.remove();
+                responseListener.remove();
                 manager?.destroy();
             };
         }, [manager]);
@@ -166,14 +214,11 @@ export const BleProvider: React.FC<{
             }
         };
 
-        const receiveMessage = (callback: (message: string) => void) => {
+        const receiveMessage = (callback: (message: string) => void, enableBackgroundNotifications: boolean) => {
             if (connectedDevice) {
                 try {
                     console.log('Starting characteristic monitoring...');
-                    bleService.monitorMessages(connectedDevice, serviceUUID, characteristicUUID, (message) => {
-                        console.log('Received message:', message);
-                        callback(message);
-                    });
+                    bleService.monitorMessages(connectedDevice, serviceUUID, characteristicUUID, callback, enableBackgroundNotifications);
                 } catch (error) {
                     console.error('Monitor messages error:', error);
                 }

@@ -127,6 +127,7 @@ const List: React.FC<ListProps> = ({
                             value={item.switchValue}
                             onValueChange={item.onSwitchChange}
                             disabled={item.disabled}
+                            style={{ transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] }}
                         />
                     )}
 
