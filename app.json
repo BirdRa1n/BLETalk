@@ -67,9 +67,24 @@
       "permissions": [
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
         "android.permission.BLUETOOTH_CONNECT"
       ],
       "package": "com.birdra1n.BLETalk"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a43cac01-1fb9-45c0-aced-5f71ba41726e"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/a43cac01-1fb9-45c0-aced-5f71ba41726e"
     }
   }
 }
