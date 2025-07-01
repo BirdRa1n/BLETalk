@@ -3,7 +3,7 @@
     "name": "BLETalk",
     "slug": "BLETalk",
     "version": "1.0.0",
-    "scheme": "BLETalk",
+    "scheme": "bletalk",
     "web": {
       "bundler": "metro",
       "output": "static",
