@@ -7,7 +7,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="(devices)"
         options={{
-          title: 'Dispositivos',
+          title: 'Devices',
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => <Ionicons name={focused ? 'grid' : 'grid-outline'} size={size} color={color} />
         }}

@@ -28,16 +28,16 @@ export default function DevicesScreen() {
                             scrollable={false}
                             grouped
                             items={devices.map(device => ({
-                                label: device.name ?? 'Dispositivo sem nome',
+                                label: device.name ?? device?.id,
                                 type: 'navigation',
                                 onPress: () => router.push(`/(tabs)/(devices)/${device.id}`)
                             }))}
-                            title="Dispositivos Encontrados"
-                            description='Clique em um dispositivo para ver suas informações'
+                            title="Found Devices"
+                            description='Click on a device to view its information'
                         />
                     </>
                 ) : (
-                    <Text className="text-red-500">Permissões de Bluetooth necessárias</Text>
+                    <Text className="text-red-500">Please grant location permissions</Text>
                 )}
             </View>
         </ScrollView>

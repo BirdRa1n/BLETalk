@@ -40,15 +40,15 @@ export default function DeviceScreen() {
             contentInsetAdjustmentBehavior="automatic"
             showsVerticalScrollIndicator={false}
         >
-            <Stack.Screen options={{ title: 'Dispositivo' }} />
+            <Stack.Screen options={{ title: 'Device' }} />
             {connectedDevice?.id === device?.id ? (
                 <>
                     <List
                         grouped
                         scrollable={false}
                         showDividers={true}
-                        title='Informações do Dispositivo'
-                        description='Informações do dispositivo conectado'
+                        title='Device Information'
+                        description='Information about the connected device'
                         items={[
                             {
                                 label: 'Name',
@@ -59,7 +59,7 @@ export default function DeviceScreen() {
                                 value: connectedDevice?.id || '',
                             },
                             {
-                                label: 'Notificações',
+                                label: 'Notifications',
                                 type: 'switch',
                                 switchValue: enableBackgroundNotifications,
                                 onSwitchChange: (value) => setEnableBackgroundNotifications(value),
@@ -68,15 +68,15 @@ export default function DeviceScreen() {
                     />
                     <List
                         grouped
-                        title='Mensagens'
+                        title='Send Message'
                         showDividers={true}
                         scrollable={false}
                         items={[
                             {
-                                label: 'Mensagem',
+                                label: 'Message',
                                 type: 'input',
                                 inputMultiLine: true,
-                                inputPlaceholder: 'Digite sua mensagem',
+                                inputPlaceholder: 'Type your message here...',
                                 inputValue: message,
                                 onInputChange: (text) => setMessage(text),
                                 onInputSubmit: () => handleSendMessage(),
@@ -87,23 +87,23 @@ export default function DeviceScreen() {
                         onPress={handleSendMessage}
                         className="p-4 bg-white rounded-xl mt-1 dark:bg-zinc-900 items-center"
                     >
-                        <Text className="text-black text-center dark:text-white">Enviar Mensagem</Text>
+                        <Text className="text-black text-center dark:text-white">Send Message</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={disconnectDevice}
                         className="p-4 bg-red-500 rounded-xl mt-2"
                     >
-                        <Text className="text-white text-center">Desconectar</Text>
+                        <Text className="text-white text-center">Disconnect</Text>
                     </TouchableOpacity>
                 </>
             ) : (
                 <>
                     <List
                         grouped
-                        title='Informações do Dispositivo'
                         showDividers={true}
                         scrollable={false}
-                        description='Informações do dispositivo conectado. Selecione para conectar ou enviar mensagens.'
+                        title='Device Information'
+                        description='Information about the connected device. Select to connect or send messages.'
                         items={[
                             {
                                 label: 'Name',
@@ -119,7 +119,7 @@ export default function DeviceScreen() {
                         onPress={handleConnect}
                         className="p-4 bg-white rounded-xl mt-1 dark:bg-zinc-900 items-center"
                     >
-                        <Text className="text-gray-600 dark:text-white text-center">Conectar</Text>
+                        <Text className="text-gray-600 dark:text-white text-center">Connect</Text>
                     </TouchableOpacity>
                 </>
             )}
@@ -129,9 +129,9 @@ export default function DeviceScreen() {
                     showDividers
                     grouped
                     scrollable={false}
-                    title='Mensagens'
+                    title='Received Messages'
                     items={receivedMessages.map((msg, index) => ({
-                        label: `Mensagem ${index + 1}`,
+                        label: `Message ${index + 1}`,
                         value: msg
                     }))}
                 />

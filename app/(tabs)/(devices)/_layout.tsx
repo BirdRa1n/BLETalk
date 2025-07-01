@@ -6,7 +6,7 @@ export default function Layout() {
             <Stack.Screen
                 name="index"
                 options={{
-                    title: 'Dispositivos',
+                    title: 'Devices',
                     headerShown: true,
                     headerLargeTitle: true,
                     headerLargeTitleShadowVisible: false,
@@ -16,7 +16,7 @@ export default function Layout() {
             <Stack.Screen
                 name="[id]"
                 options={{
-                    title: 'Detalhes',
+                    title: 'Device',
                     headerShown: true,
                     headerLargeTitle: true,
                     headerLargeTitleShadowVisible: false,
