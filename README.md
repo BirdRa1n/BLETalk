@@ -1,6 +1,10 @@
 # BLETalk
 _Connecting Devices, Empowering Innovation Seamlessly_
 
+<p align="center">
+  <img src="assets/icon.png" alt="BLETalk Application Icon" width="150" />
+</p>
+
 ![Last Commit](https://img.shields.io/github/last-commit/BirdRa1n/BLETalk?style=flat&logo=git&logoColor=white&color=0080ff)
 ![Top Language](https://img.shields.io/github/languages/top/BirdRa1n/BLETalk?style=flat&color=0080ff)
 ![Language Count](https://img.shields.io/github/languages/count/BirdRa1n/BLETalk?style=flat&color=0080ff)
@@ -37,23 +41,23 @@ _Built with the following tools and technologies:_
 
 ## Overview
 
-**BLETalk** is a robust React Native toolkit designed to simplify Bluetooth Low Energy (BLE) interactions in cross-platform mobile applications. It empowers developers to build connected apps with seamless device management, real-time messaging, and a polished, customizable UI. With a focus on scalability and developer experience, BLETalk streamlines BLE development for iOS and Android.
+**BLETalk** is a powerful React Native toolkit designed to streamline Bluetooth Low Energy (BLE) interactions in cross-platform mobile applications. It enables developers to create connected apps with seamless device management, real-time messaging, and a polished, customizable UI. Built for scalability and developer experience, BLETalk supports iOS, Android, and web platforms via Expo.
 
 **Why Choose BLETalk?**
 
-BLETalk combines powerful BLE functionality with a modern development stack, enabling rapid prototyping and production-ready applications. Whether you're building IoT solutions or connected mobile apps, BLETalk provides the tools you need to succeed.
+BLETalk combines robust BLE functionality with a modern development stack, making it ideal for rapid prototyping and production-ready IoT or connected mobile applications. For a complete BLE testing experience, pair BLETalk with its companion firmware project, [**BLETalk_ESP32**](https://github.com/BirdRa1n/BLETalk_ESP32), which demonstrates BLE communication with an ESP32 device.
 
 ---
 
 ## Features
 
-- 🧩 **Effortless BLE Management**: Scan, pair, and communicate with BLE devices with a simple, intuitive API.
-- 🌈 **Cross-Platform Styling**: Unified UI with Tailwind CSS, NativeWind, and Expo for a consistent look across platforms.
-- 📱 **Reusable UI Components**: Modular buttons, containers, headers, and navigation for faster development.
+- 🧩 **Effortless BLE Management**: Scan, pair, and communicate with BLE devices using an intuitive API.
+- 🌈 **Cross-Platform Styling**: Achieve a consistent look with Tailwind CSS, NativeWind, and Expo configurations.
+- 📱 **Reusable UI Components**: Modular buttons, containers, headers, and navigation for rapid development.
 - 🚀 **Developer-Friendly Tools**: TypeScript, ESLint, Prettier, and Babel ensure clean, maintainable code.
 - 🔒 **Permissions & Notifications**: Simplified handling of Bluetooth, location permissions, and background notifications.
-- ⚙️ **Flexible Architecture**: Configurable setup supporting iOS, and Android with minimal configuration.
-- 🌙 **Light & Dark Mode**: Automatically adapts to device theme settings for an enhanced user experience.
+- ⚙️ **Flexible Architecture**: Configurable setup for iOS, Android, and web with minimal overhead.
+- 🌙 **Light & Dark Mode**: Automatically adapts to the device's theme settings for a seamless user experience.
 
 ---
 
@@ -79,47 +83,56 @@ Ensure you have the following installed:
 - **Node.js**: Version 16 or higher
 - **npm**: Version 8 or higher
 - **TypeScript**: For type-safe development
-- **Expo CLI**: For running and building the app
+- **Expo CLI**: For running and building the app (`npm install -g expo-cli`)
 - **Git**: For cloning the repository
 
 ### Installation
 
 1. **Clone the Repository**:
+
    ```bash
    git clone https://github.com/BirdRa1n/BLETalk
    cd BLETalk
    ```
 
 2. **Install Dependencies**:
+
    ```bash
    npm install
    ```
 
 3. **Set Up Environment**:
-   - Configure your `.env` file for API keys or BLE settings (if applicable).
-   - Ensure Bluetooth and location permissions are enabled in your development environment.
+
+   - Create a `.env` file in the project root for BLE or API configurations (e.g., `BLE_UUID` for service UUIDs, if required).
+   - Ensure Bluetooth and location permissions are enabled in your development environment (check Expo documentation for setup).
 
 ### Usage
 
 1. **Run the App**:
+
    ```bash
    npm start
    ```
-   Use Expo CLI to launch the app on iOS, Android, or web.
+
+   Use Expo CLI to launch the app on iOS, Android, or web via the Expo Go app or a browser.
 
 2. **Build for Production**:
+
    ```bash
-   npm run build
+   expo build:android
+   expo build:ios
    ```
 
 ### Testing
 
-Run tests to ensure everything works as expected:
+Run tests to ensure functionality:
+
 ```bash
 npm test
 ```
 
 For linting and formatting:
+
 ```bash
 npm run lint
 npm run format
@@ -129,7 +142,7 @@ npm run format
 
 ## Contributing
 
-We welcome contributions to BLETalk! To get started:
+We welcome contributions to BLETalk! To contribute:
 
 1. Fork the repository.
 2. Create a feature branch (`git checkout -b feature/YourFeature`).
@@ -137,7 +150,7 @@ We welcome contributions to BLETalk! To get started:
 4. Push to the branch (`git push origin feature/YourFeature`).
 5. Open a pull request.
 
-Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) and ensure your code adheres to the project's ESLint and Prettier configurations.
+Please adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) and ensure your code follows the project's ESLint and Prettier configurations.
 
 ---
 
