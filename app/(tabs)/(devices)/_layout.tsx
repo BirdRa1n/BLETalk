@@ -13,16 +13,6 @@ export default function Layout() {
                     headerLargeStyle: { backgroundColor: 'transparent' },
                 }}
             />
-            <Stack.Screen
-                name="[id]"
-                options={{
-                    title: 'Device',
-                    headerShown: true,
-                    headerLargeTitle: true,
-                    headerLargeTitleShadowVisible: false,
-                    headerLargeStyle: { backgroundColor: 'transparent' },
-                }}
-            />
         </Stack>
     );
 }

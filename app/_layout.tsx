@@ -12,6 +12,17 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(device)"
+            options={{
+              title: 'Device',
+              headerLargeTitle: true,
+              headerLargeTitleShadowVisible: false,
+              headerLargeStyle: { backgroundColor: 'transparent' },
+              headerBackTitle: 'Back',
+              headerBackVisible: true,
+            }}
+          />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack>
       </ThemeProvider>

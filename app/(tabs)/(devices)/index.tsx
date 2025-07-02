@@ -62,7 +62,7 @@ export default function DevicesScreen() {
                                         className="bg-blue-500 p-2 rounded-md"
                                     />
                                 ),
-                                onPress: () => router.push(`/(tabs)/(devices)/${device.id}`)
+                                onPress: () => router.push(`/(device)/${device.id}`)
                             }))}
                             title="Found Devices"
                             description="Click on a device to view its information"
