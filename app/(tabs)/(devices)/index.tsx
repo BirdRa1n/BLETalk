@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { useBle } from '~/contexts/BleContext';
 import { usePermissions } from '~/hooks/usePermissions';
 import List from '~/components/swift-ui/list';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 export default function DevicesScreen() {
     const { devices, isScanning, startScan } = useBle();
@@ -30,6 +32,7 @@ export default function DevicesScreen() {
                             items={devices.map(device => ({
                                 label: device.name ?? device?.id,
                                 type: 'navigation',
+                                iconLeft: <Ionicons name="bluetooth" size={20} color="white" className='bg-blue-500 p-2 rounded-md' />,
                                 onPress: () => router.push(`/(tabs)/(devices)/${device.id}`)
                             }))}
                             title="Found Devices"
