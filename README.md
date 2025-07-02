@@ -37,7 +37,7 @@ _Built with the following tools and technologies:_
 
 ## Overview
 
-**BLETalk** is a robust React Native toolkit designed to simplify Bluetooth Low Energy (BLE) interactions in cross-platform mobile applications. It empowers developers to build connected apps with seamless device management, real-time messaging, and a polished, customizable UI. With a focus on scalability and developer experience, BLETalk streamlines BLE development for iOS, Android, and web platforms.
+**BLETalk** is a robust React Native toolkit designed to simplify Bluetooth Low Energy (BLE) interactions in cross-platform mobile applications. It empowers developers to build connected apps with seamless device management, real-time messaging, and a polished, customizable UI. With a focus on scalability and developer experience, BLETalk streamlines BLE development for iOS and Android.
 
 **Why Choose BLETalk?**
 
