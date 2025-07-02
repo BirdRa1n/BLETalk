@@ -52,8 +52,8 @@ BLETalk combines powerful BLE functionality with a modern development stack, ena
 - 📱 **Reusable UI Components**: Modular buttons, containers, headers, and navigation for faster development.
 - 🚀 **Developer-Friendly Tools**: TypeScript, ESLint, Prettier, and Babel ensure clean, maintainable code.
 - 🔒 **Permissions & Notifications**: Simplified handling of Bluetooth, location permissions, and background notifications.
-- ⚙️ **Flexible Architecture**: Configurable setup supporting web, iOS, and Android with minimal configuration.
-- 🌙 **Light & Dark Mode**: Automatically adapts to device or browser theme settings for an enhanced user experience.
+- ⚙️ **Flexible Architecture**: Configurable setup supporting iOS, and Android with minimal configuration.
+- 🌙 **Light & Dark Mode**: Automatically adapts to device theme settings for an enhanced user experience.
 
 ---
 
